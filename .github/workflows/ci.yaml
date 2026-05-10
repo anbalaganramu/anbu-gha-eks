@@ -17,7 +17,6 @@ jobs:
           username: "${{ secrets.DOCKER_USERNAME }}"
           password: "${{ secrets.DOCKER_PASSWORD }}"
       - name: Push Docker Image
-        run: "docker push anbumca05/gha-app:${GITHUB_SHA::7} . "
-        
+        run: "docker push anbumca05/gha-app:${GITHUB_SHA::7}"
         
           
