@@ -34,27 +34,11 @@ jobs:
           # Short commit hash
           SHORT_SHA=${GITHUB_SHA::7}
           # Update image tag in deployment.yaml
-          yq -i '.spec.template.spec.containers[0].image = "anbumca05/gha-app:'"$SHORT_SHA"'"' ./k8s/pyapp-deployment.yaml
-      - name: Commit and Push changes
+          yq -i '.spec.template.spec.containers[0].image = "anbumca05/gha-pyapp:'"$SHORT_SHA"'"' ./k8s/pyapp-deployment.yaml
+      - name: Commit deployment file changes
         run: |
-          git config --global user.name "github-actions[bot]"
-          git config --global user.email "github-actions[bot]@users.noreply.github.com"
-          
-          # Find the file regardless of where it is (k8s/ or root)
-          # Replace 'py-deployment.yaml' with a pattern that matches your file
-          FILE_PATH=$(find . -name "py-deployment.yaml" -o -name "pyapp-deployment.yml" | head -n 1)
-          
-          if [ -z "$FILE_PATH" ]; then
-            echo "Error: Deployment file not found!"
-            exit 1
-          fi
-
-          git add "$FILE_PATH"
-          
-          # Only commit if there are changes to avoid errors
-          if git diff --staged --quiet; then
-            echo "No changes to commit"
-          else
-            git commit -m "Update image tag to ${GITHUB_SHA::7} [skip ci]"
-            git push
-          fi
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions@noreply"
+            git add k8s/pyapp-deployment.yaml
+            git commit -m 'docker tag updated by GHA' || echo "Already commited changes"
+            git push origin main
