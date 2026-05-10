@@ -1,0 +1,11 @@
+name: Kubernetes CI
+on: 
+  push:
+    branches:
+      - feature/v1
+jobs:
+  pyapp-ci:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Code Checkout
+        uses: actions/checkout@v6
